@@ -12,8 +12,8 @@ export class Simulation implements ISimObject {
       this.particles.push(new Particle(this.width, this.height, this.pallete));
     }
   }
-  Update(): void {
-    this.particles.forEach((p) => p.Update());
+  Update(imageData: ImageData): void {
+    this.particles.forEach((p) => p.Update(imageData));
   }
   init = false;
   Draw(ctx: CanvasRenderingContext2D): void {

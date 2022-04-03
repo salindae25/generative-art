@@ -1,4 +1,4 @@
 export interface ISimObject {
-  Update(): void;
+  Update(imageData: ImageData): void;
   Draw(ctx: CanvasRenderingContext2D): void;
 }
