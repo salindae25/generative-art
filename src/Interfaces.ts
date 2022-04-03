@@ -1,4 +1,9 @@
 export interface ISimObject {
-  Update(imageData: ImageData): void;
+  Update(magicParams: MagicParams): void;
   Draw(ctx: CanvasRenderingContext2D): void;
+}
+
+export interface MagicParams {
+  imageData: ImageData;
+  index: number;
 }

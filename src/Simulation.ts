@@ -1,4 +1,4 @@
-import { ISimObject } from "./Interfaces";
+import { ISimObject, MagicParams } from "./Interfaces";
 import { Particle } from "./Particle";
 import { ColorPallete, particleCount } from "./Constants";
 import { GetRandomInt } from "./Utils";
@@ -12,13 +12,18 @@ export class Simulation implements ISimObject {
       this.particles.push(new Particle(this.width, this.height, this.pallete));
     }
   }
-  Update(imageData: ImageData): void {
-    this.particles.forEach((p) => p.Update(imageData));
+  Update(magicParams: MagicParams): void {
+    this.particles.forEach((p, i) => {
+      magicParams.index = i;
+      p.Update(magicParams);
+    });
   }
   init = false;
   Draw(ctx: CanvasRenderingContext2D): void {
     if (!this.init) {
-      ctx.fillStyle = `#${this.pallete[0]}`;
+      ctx.fillStyle = `#${
+        ColorPallete[GetRandomInt(0, ColorPallete.length)][0]
+      }`;
       ctx.fillRect(0, 0, this.width, this.height);
       this.init = true;
     }

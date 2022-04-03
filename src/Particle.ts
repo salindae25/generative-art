@@ -5,8 +5,8 @@ import {
   ToLuma,
   Clamp,
 } from "./Utils";
-import { MaxParticleSize } from "./Constants";
-import { ISimObject } from "./Interfaces";
+import { MaxParticleSize, MinParticleSize } from "./Constants";
+import { ISimObject, MagicParams } from "./Interfaces";
 
 export class Particle implements ISimObject {
   x = 0;
@@ -43,22 +43,27 @@ export class Particle implements ISimObject {
     const ln = 1 - lums / 255.0;
     return ln;
   }
-  Update(imageData: ImageData): void {
-    const ln = this.imageComplementLuma(imageData);
-    const dRadius = GetRandomFloat(-MaxParticleSize / 10, MaxParticleSize / 10);
-    const dSpeed = GetRandomFloat(-0.1, 0.4);
-    const dTheta = GetRandomFloat(-Math.PI / 8, Math.PI / 8);
+  Update(magicParams: MagicParams): void {
+    const ln = this.imageComplementLuma(magicParams.imageData);
+    const dRadius = GetRandomFloat(-MaxParticleSize / 5, MaxParticleSize / 5);
+    const dSpeed = GetRandomFloat(-0.1, 0.1);
+    const dTheta = GetRandomFloat(-Math.PI / 12, Math.PI / 12);
 
     this.speed += dSpeed;
     this.theta += dTheta;
-    const [dx, dy] = FromPolar(this.speed * ln, this.theta * ln);
+    const [dx, dy] = FromPolar(this.speed, this.theta);
 
     this.x += dx;
     this.y += dy;
-    this.x = Clamp(0, this.w, this.x);
-    this.y = Clamp(0, this.h, this.y);
+
+    this.x = Clamp(0, this.w - 1, this.x);
+    this.y = Clamp(0, this.h - 1, this.y);
+
     this.radius += dRadius;
-    this.radius = Clamp(1.5, MaxParticleSize, this.radius) * ln;
+    this.radius = Clamp(MinParticleSize, MaxParticleSize, this.radius) * ln;
+    if (this.radius < 1.0) {
+      this.radius = 0.1;
+    }
     this.ttl -= 1;
     if (this.ttl === 0) {
       this.reset();

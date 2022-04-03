@@ -1,3 +1,4 @@
+import { MagicParams } from "./Interfaces";
 import { Simulation } from "./Simulation";
 import "./style.css";
 import { GetRandomInt } from "./Utils";
@@ -24,7 +25,7 @@ function createDrawCanvas(
   const sim = new Simulation(width, height);
   const imageData = imageCtx.getImageData(0, 0, width, height);
   setInterval(() => {
-    sim.Update(imageData);
+    sim.Update(<MagicParams>{ imageData: imageData });
   }, 1000 / updateFrameRate);
 
   setInterval(() => {
